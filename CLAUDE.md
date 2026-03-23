@@ -32,6 +32,10 @@ intelligence layer that both can leverage.
 - Never continuously check status after spawning a swarm — wait for results
 - ALWAYS read a file before editing it
 - NEVER commit secrets, credentials, or .env files
+- **Before starting any bug fix or feature**, search Paperclip Memory for related past work:
+  `node .claude/helpers/paperclip-memory.mjs search "relevant keywords"`
+- Memory observations are captured automatically — no manual action needed
+- When encountering a familiar-looking problem, search memory first to avoid repeat work
 
 ## Project Structure
 
@@ -46,8 +50,12 @@ paperclipAU/
 │   └── plugins/         # Plugin system (SDK, scaffolder, examples)
 ├── skills/              # Paperclip-specific agent skills
 ├── doc/                 # Product specs (GOAL.md, PRODUCT.md, SPEC.md, TASKS.md)
+├── scripts/
+│   └── ruvector-bootstrap.mjs  # RuVector init (ONNX fetch-patch, all subsystems)
 ├── .claude/             # Ruflo + Superpowers (skills/, agents/, commands/, helpers/)
-└── node_modules/ruvector/  # RuVector intelligence layer
+│   └── helpers/paperclip-memory.mjs  # Native memory system (observations, summaries, search)
+├── .ruvector/           # Persistent vector storage + memory index
+└── node_modules/ruvector/  # RuVector intelligence layer (18 @ruvector/* native packages)
 ```
 
 ## Paperclip Domain Model
@@ -148,6 +156,15 @@ const rv = await initRuVector({ storagePath: '.ruvector/paperclip.db' });
 
 **Model files** are pre-downloaded at `~/.ruvector/models/`. The bootstrap
 patches `fetch()` to serve them locally (Node.js DNS issues with HuggingFace).
+
+If models are missing, re-download:
+```bash
+mkdir -p ~/.ruvector/models
+curl -sL -o ~/.ruvector/models/all-MiniLM-L6-v2-model.onnx \
+  "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/onnx/model.onnx"
+curl -sL -o ~/.ruvector/models/all-MiniLM-L6-v2-tokenizer.json \
+  "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer.json"
+```
 
 ### Verified Subsystem Status
 
@@ -384,9 +401,9 @@ automatically when they apply. Use the `Skill` tool to invoke them.
 | Approved design or spec ready for implementation | `writing-plans` | — |
 | Written plan ready to execute | `executing-plans` | Dispatch via `dispatching-parallel-agents` or Ruflo swarm |
 | Any feature or bugfix implementation | `test-driven-development` | — |
-| Any bug, test failure, or unexpected behavior | `systematic-debugging` | RuVector memory search for past patterns |
+| Any bug, test failure, or unexpected behavior | `systematic-debugging` | `paperclip-memory.mjs search` for past similar bugs |
 | 2+ independent tasks that can run in parallel | `dispatching-parallel-agents` | Ruflo swarm for scaling beyond 2-3 agents |
-| Implementation complete, claiming "done" | `verification-before-completion` | RuVector security/complexity analysis |
+| Implementation complete, claiming "done" | `verification-before-completion` | RuVector security/complexity analysis; memory auto-captures summary |
 | Completing a task or major feature | `requesting-code-review` | Ruflo `code-reviewer` agent |
 | Receiving review feedback | `receiving-code-review` | — |
 | Feature work needing isolation | `using-git-worktrees` | — |
@@ -413,7 +430,7 @@ Use Ruflo when Superpowers skills need to scale beyond a single agent.
 | Trigger | Ruflo Action |
 |---------|-------------|
 | Complex multi-file implementation plan | Spawn swarm agents via `dispatching-parallel-agents` skill + Ruflo swarm |
-| Need past patterns or context | `memory search --query "..."` |
+| Need past patterns or context | `paperclip-memory.mjs search "..."` (semantic) or `ruflo memory search --query "..."` (keyword) |
 | Code review requested by Superpowers | Dispatch Ruflo `code-reviewer` agent |
 | Security-related changes | `security scan` via daemon |
 | Large-scale refactor (5+ files) | Initialize swarm with hierarchical topology |
@@ -448,19 +465,22 @@ Use Ruflo when Superpowers skills need to scale beyond a single agent.
 ### Example: "Add semantic search to issues"
 
 ```
+0. Memory: Search for past related work → paperclip-memory.mjs search "semantic search issues"
 1. Superpowers: `brainstorming` → design search UX, embedding strategy, index schema
 2. Superpowers: `writing-plans` → break into tasks (embedder, index, API route, UI)
 3. Superpowers: `executing-plans` →
-   └─ RuVector: VectorDB for HNSW index, EmbeddingService for text→vector
+   └─ RuVector: VectorDB for HNSW index, rv.embed() for text→384d vector
    └─ Ruflo: Spawn parallel agents for API route + UI component + tests
    └─ Superpowers: Each task follows `test-driven-development`
 4. Superpowers: `verification-before-completion` → verify search quality, run tests
 5. Superpowers: `requesting-code-review` → dispatch Ruflo code-reviewer
+6. Memory: Session summary auto-generated on completion (observations captured throughout)
 ```
 
 ### Example: "Improve agent task assignment"
 
 ```
+0. Memory: Search for past routing work → paperclip-memory.mjs search "agent routing assignment"
 1. Superpowers: `brainstorming` → design smart routing approach
 2. RuVector: SemanticRouter for intent matching + LearningEngine for RL optimization
 3. RuVector: IntelligenceEngine to combine memory + routing + learning
@@ -471,8 +491,9 @@ Use Ruflo when Superpowers skills need to scale beyond a single agent.
 ### Example: "Fix bug in cost tracking"
 
 ```
+0. Memory: Search for past cost bugs → paperclip-memory.mjs search "cost tracking bug"
 1. Superpowers: `systematic-debugging` → root cause investigation
-   └─ RuVector: memory search for similar past bugs; pattern analysis
+   └─ Memory: search for similar past bugs and their fixes
 2. Superpowers: `test-driven-development` → write failing test, then fix
 3. Superpowers: `verification-before-completion` → confirm fix works
 4. Superpowers: `requesting-code-review` → review the fix
@@ -544,7 +565,11 @@ Use Ruflo when Superpowers skills need to scale beyond a single agent.
 | `npx ruflo@latest daemon start` | Start background workers |
 | `npx ruflo@latest swarm init` | Initialize swarm |
 | `npx ruflo@latest swarm status` | Check swarm status |
-| `npx ruflo@latest memory search --query "..."` | Search memory |
+| `node .claude/helpers/paperclip-memory.mjs search "query"` | Semantic memory search (use this first) |
+| `node .claude/helpers/paperclip-memory.mjs timeline obs-ID` | Context around an observation |
+| `node .claude/helpers/paperclip-memory.mjs details id1,id2` | Full observation details |
+| `node .claude/helpers/paperclip-memory.mjs stats` | Memory statistics |
+| `npx ruflo@latest memory search --query "..."` | Ruflo keyword memory search |
 | `npx ruflo@latest agent spawn -t TYPE --name NAME` | Spawn agent |
 | `npx ruflo@latest security scan` | Security scan |
 | `npx ruvector --help` | RuVector CLI |
