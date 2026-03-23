@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-03-23T00:34:14.351Z",
+  "projectRoot": "/home/user/paperclipAU",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": true,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1774226054351
+}
