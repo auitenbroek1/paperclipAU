@@ -1084,6 +1084,50 @@
       "hash": "47f3a676e8491cd0",
       "timestamp": "2026-03-23T23:12:44.439Z",
       "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774307666714-723y",
+      "type": "vcs",
+      "title": "Ran: echo \"[REDACTED_PAT]",
+      "narrative": "Tool: Bash. Command: echo \"[REDACTED_PAT]\" | gh auth login --w. Description: Auth with new PAT and verify superstack1 access",
+      "concepts": [
+        "authentication",
+        "cost"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "e98c70adde8a141e",
+      "timestamp": "2026-03-23T23:14:26.714Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774307733063-6vyp",
+      "type": "action",
+      "title": "Ran: cd /tmp && rm -rf superstack1 && bash /home/user/paperclipAU",
+      "narrative": "Tool: Bash. Command: cd /tmp && rm -rf superstack1 && bash /home/user/paperclipAU/scripts/bootstrap-clean-repo.sh superstack1 2>&1. Description: Run bootstrap script for superstack1",
+      "concepts": [
+        "deployment"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "03c083aa41634a91",
+      "timestamp": "2026-03-23T23:15:33.063Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774307743984-qnr8",
+      "type": "vcs",
+      "title": "Ran: cd /tmp/superstack1 && git remote add origin https://github.",
+      "narrative": "Tool: Bash. Command: cd /tmp/superstack1 && git remote add origin https://github.com/auitenbroek1/superstack1.git 2>/dev/null; git branch -M . Description: Push bootstrapped repo to GitHub",
+      "concepts": [
+        "deployment",
+        "git"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "c0250c338127be1d",
+      "timestamp": "2026-03-23T23:15:43.984Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
     }
   ],
   "summaries": [
@@ -2472,6 +2516,64 @@
       "types": {
         "action": 10,
         "vcs": 14,
+        "change": 1
+      }
+    },
+    {
+      "id": "sum-1774307758268",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T23:15:58.268Z",
+      "observationCount": 28,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 11,
+        "vcs": 16,
+        "change": 1
+      }
+    },
+    {
+      "id": "sum-1774307956298",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T23:19:16.298Z",
+      "observationCount": 28,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 11,
+        "vcs": 16,
         "change": 1
       }
     }
