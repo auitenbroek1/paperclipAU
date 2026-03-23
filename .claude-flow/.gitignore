@@ -5,3 +5,4 @@ sessions/
 neural/
 *.log
 *.tmp
+*.pid
