@@ -679,6 +679,66 @@
       "hash": "8d56a062aa31c76f",
       "timestamp": "2026-03-23T16:25:19.221Z",
       "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e"
+    },
+    {
+      "id": "obs-1774283787992-h2gm",
+      "type": "create",
+      "title": "Created bootstrap-clean-repo.sh",
+      "narrative": "Tool: Write. File: /home/user/paperclipAU/scripts/bootstrap-clean-repo.sh",
+      "concepts": [
+        "authentication",
+        "database",
+        "api",
+        "frontend",
+        "testing",
+        "deployment",
+        "git"
+      ],
+      "files": [
+        "/home/user/paperclipAU/scripts/bootstrap-clean-repo.sh"
+      ],
+      "tool": "Write",
+      "hash": "299c35f231d723e9",
+      "timestamp": "2026-03-23T16:36:27.992Z",
+      "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e"
+    },
+    {
+      "id": "obs-1774283794834-kqo2",
+      "type": "action",
+      "title": "Ran: chmod +x /home/user/paperclipAU/scripts/bootstrap-clean-repo",
+      "narrative": "Tool: Bash. Command: chmod +x /home/user/paperclipAU/scripts/bootstrap-clean-repo.sh. Description: Make script executable",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "d4146c253eca09f0",
+      "timestamp": "2026-03-23T16:36:34.834Z",
+      "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e"
+    },
+    {
+      "id": "obs-1774283800882-f7nd",
+      "type": "action",
+      "title": "Ran: bash -n /home/user/paperclipAU/scripts/bootstrap-clean-repo.",
+      "narrative": "Tool: Bash. Command: bash -n /home/user/paperclipAU/scripts/bootstrap-clean-repo.sh && echo \"Syntax OK\". Description: Syntax check the new script",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "ea519e22f93189de",
+      "timestamp": "2026-03-23T16:36:40.882Z",
+      "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e"
+    },
+    {
+      "id": "obs-1774283805658-zh95",
+      "type": "vcs",
+      "title": "Ran: git add scripts/bootstrap-clean-repo.sh && git status --shor",
+      "narrative": "Tool: Bash. Command: git add scripts/bootstrap-clean-repo.sh && git status --short. Description: Stage new script and check status",
+      "concepts": [
+        "git"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "350cc3888afa978e",
+      "timestamp": "2026-03-23T16:36:45.658Z",
+      "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e"
     }
   ],
   "summaries": [
@@ -1112,6 +1172,26 @@
       "id": "sum-1774283172579",
       "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e",
       "timestamp": "2026-03-23T16:26:12.579Z",
+      "observationCount": 14,
+      "request": "Ran: git status --short",
+      "investigated": [],
+      "learned": [
+        "git",
+        "api",
+        "authentication"
+      ],
+      "completed": [],
+      "nextSteps": [],
+      "types": {
+        "vcs": 6,
+        "test": 1,
+        "action": 7
+      }
+    },
+    {
+      "id": "sum-1774283187815",
+      "sessionId": "3bc6c6ff-526d-4890-9f71-7a134762860e",
+      "timestamp": "2026-03-23T16:26:27.815Z",
       "observationCount": 14,
       "request": "Ran: git status --short",
       "investigated": [],
