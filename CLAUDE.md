@@ -324,6 +324,53 @@ const rv = await initRuVector({
 
 ---
 
+## Paperclip Memory System
+
+Native persistent memory built on RuVector. Automatically captures observations
+from tool use, generates session summaries, and provides semantic search.
+Replaces claude-mem patterns with zero external dependencies.
+
+**Storage**: `.ruvector/paperclip-memory.db` (HNSW vectors) + `.ruvector/memory-index.json` (metadata)
+
+### How It Works (Automatic via Hooks)
+
+| Hook | Action | What Happens |
+|------|--------|-------------|
+| **PostToolUse** | Observation capture | Every Write/Edit/Bash tool use → structured observation (type, title, narrative, concepts, files) → stored as 384d ONNX embedding in RuVector |
+| **SessionStart** | Context injection | Recent summaries + activity auto-injected into session context |
+| **Stop / SessionEnd** | Session summary | Synthesizes (request, investigated, learned, completed, next_steps) → stored as embedding |
+
+### Progressive Disclosure Search (3-Layer, Token-Efficient)
+
+```bash
+# Layer 1: Index — compact results with IDs (~50-100 tokens/result)
+node .claude/helpers/paperclip-memory.mjs search "authentication tokens"
+
+# Layer 2: Timeline — chronological context around an observation
+node .claude/helpers/paperclip-memory.mjs timeline obs-1234
+
+# Layer 3: Full details — complete observation data (~500-1000 tokens each)
+node .claude/helpers/paperclip-memory.mjs details obs-1234,obs-5678
+```
+
+### Other Commands
+
+```bash
+node .claude/helpers/paperclip-memory.mjs context    # What gets injected at session start
+node .claude/helpers/paperclip-memory.mjs stats      # Memory statistics
+```
+
+### Observation Types
+
+`create`, `change`, `discovery`, `test`, `build`, `vcs`, `delegation`, `action`
+
+### Concept Auto-Tagging
+
+Observations are auto-tagged with concepts: `authentication`, `database`, `api`,
+`frontend`, `testing`, `security`, `agent`, `deployment`, `cost`, `git`.
+
+---
+
 ## Superpowers — Automatic Skill Invocation
 
 Superpowers skills are composable development workflows that MUST be invoked
