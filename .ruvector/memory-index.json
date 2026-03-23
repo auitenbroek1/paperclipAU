@@ -924,6 +924,47 @@
       "hash": "1943659dd4543f8b",
       "timestamp": "2026-03-23T22:57:36.530Z",
       "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774306667581-lf2h",
+      "type": "vcs",
+      "title": "Ran: git add .ruvector/memory-index.json && git commit --amend -m",
+      "narrative": "Tool: Bash. Command: git add .ruvector/memory-index.json && git commit --amend -m \"$(cat <<'EOF'\nUpdate memory index (redact PAT)\n\nhttps://cl. Description: Amend commit to remove secret and force push",
+      "concepts": [
+        "security",
+        "git"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "8e3814625ec97270",
+      "timestamp": "2026-03-23T22:57:47.581Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774306708775-mi93",
+      "type": "action",
+      "title": "Ran: ls scripts/bootstrap-clean-repo.sh",
+      "narrative": "Tool: Bash. Command: ls scripts/bootstrap-clean-repo.sh. Description: Check bootstrap script exists",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "bfd7abd0996140e3",
+      "timestamp": "2026-03-23T22:58:28.775Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774306710534-kbsk",
+      "type": "action",
+      "title": "Ran: gh auth status 2>&1 | head -3",
+      "narrative": "Tool: Bash. Command: gh auth status 2>&1 | head -3. Description: Verify gh is still authenticated",
+      "concepts": [
+        "authentication"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "6c053b1eecced032",
+      "timestamp": "2026-03-23T22:58:30.535Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
     }
   ],
   "summaries": [
@@ -1733,6 +1774,64 @@
       "types": {
         "action": 7,
         "vcs": 4
+      }
+    },
+    {
+      "id": "sum-1774306674604",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T22:57:54.604Z",
+      "observationCount": 14,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 7,
+        "vcs": 6,
+        "change": 1
+      }
+    },
+    {
+      "id": "sum-1774306729857",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T22:58:49.857Z",
+      "observationCount": 16,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 9,
+        "vcs": 6,
+        "change": 1
       }
     }
   ],
