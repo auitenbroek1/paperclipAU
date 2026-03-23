@@ -50,6 +50,63 @@ paperclipAU/
 └── node_modules/ruvector/  # RuVector intelligence layer
 ```
 
+## Paperclip Domain Model
+
+### Core Concepts
+
+- **Company** — first-order entity; all data is company-scoped. One Paperclip instance runs many companies.
+- **Agent** — every employee is an AI agent. Organized in a strict tree (`reports_to`). Each has an adapter type (process, http) + config.
+- **Goal hierarchy** — company goal → team goals → agent goals → tasks. All work traces back to the company mission.
+- **Issue** — the fundamental unit of work. Supports parent-child hierarchy, single assignee, atomic checkout.
+- **Heartbeat** — agents wake on schedule, check inbox, do work, report back. Two modes: process (fork subprocess) or http (webhook).
+- **Board** — human governance layer. Creates companies, approves hires, intervenes when needed.
+- **Adapter** — connects execution environments: `claude-local`, `codex-local`, `cursor-local`, `gemini-local`, `openclaw-gateway`, `hermes`, `pi-local`, `opencode-local`.
+
+### Task Lifecycle
+
+`backlog` → `todo` → `in_progress` (atomic checkout) → `in_review` → `done`
+Also: `blocked`, `cancelled`. Single assignee only. No automatic reassignment.
+
+### Key Patterns
+
+- **Agent API auth**: API keys (hashed at rest) + run JWT tokens (short-lived per heartbeat)
+- **Environment injection**: agents receive `PAPERCLIP_*` env vars for API access
+- **Run tracking**: `PAPERCLIP_RUN_ID` header links all actions to execution context
+- **Cost control**: monthly UTC budget per agent, hard-stop auto-pause on overspend
+- **Activity log**: immutable audit trail for all mutating actions
+- **Real-time**: WebSocket live events for task updates, comments, heartbeats
+- **Communication**: tasks + comments only (no separate chat system)
+
+### API Routes (server/src/routes/)
+
+| Route | Description |
+|-------|-------------|
+| `/api/companies` | Company CRUD |
+| `/api/agents` | Agent lifecycle, `/me` identity, `/me/inbox-lite` |
+| `/api/issues` | Task CRUD, `/{id}/checkout` atomic assignment, `/{id}/comments` |
+| `/api/goals` | Goal hierarchy management |
+| `/api/projects` | Project management + workspaces |
+| `/api/approvals` | Governance approval workflows |
+| `/api/costs` | Cost tracking + budget enforcement |
+| `/api/secrets` | Encrypted secret storage (company-scoped) |
+| `/api/activity` | Immutable audit log |
+| `/api/dashboard` | Company summary metrics |
+| `/api/plugins` | Plugin registry, webhooks, jobs |
+| `/api/access` | Authorization info |
+
+### Database (packages/db/src/schema/)
+
+45+ tables via Drizzle ORM. Key tables: `companies`, `agents`, `issues`,
+`issue_comments`, `goals`, `projects`, `approvals`, `cost_events`,
+`heartbeat_runs`, `activity_log`, `documents`, `plugins`, `company_secrets`.
+Embedded PGlite for dev, hosted Postgres for production.
+
+### Frontend (ui/src/)
+
+React 19 + Vite + Tailwind CSS 4 + Radix UI. Pages: dashboard, agents (org chart),
+issues (kanban), goals, projects, costs, activity, approvals, settings.
+TanStack React Query for server state. WebSocket for real-time updates.
+
 ## Build & Test
 
 ```bash
