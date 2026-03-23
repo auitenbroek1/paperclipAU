@@ -1056,6 +1056,20 @@
       "hash": "a66e708acad138c3",
       "timestamp": "2026-03-23T23:10:36.147Z",
       "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
+    },
+    {
+      "id": "obs-1774307454358-qw8i",
+      "type": "vcs",
+      "title": "Ran: sed -i 's/github_pat_[A-Za-z0-9_]\\{20,\\}/[REDACTED_PAT]/g' .",
+      "narrative": "Tool: Bash. Command: sed -i 's/github_pat_[A-Za-z0-9_]\\{20,\\}/[REDACTED_PAT]/g' .ruvector/memory-index.json && git add .ruvector/memory-index. Description: Redact PATs, commit and push",
+      "concepts": [
+        "git"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "f1013cc5bdfe07de",
+      "timestamp": "2026-03-23T23:10:54.358Z",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96"
     }
   ],
   "summaries": [
@@ -2328,6 +2342,64 @@
       "types": {
         "action": 10,
         "vcs": 12,
+        "change": 1
+      }
+    },
+    {
+      "id": "sum-1774307460433",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T23:11:00.433Z",
+      "observationCount": 24,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 10,
+        "vcs": 13,
+        "change": 1
+      }
+    },
+    {
+      "id": "sum-1774307559123",
+      "sessionId": "8c3100ea-32ea-45bb-ab47-455e471f4c96",
+      "timestamp": "2026-03-23T23:12:39.123Z",
+      "observationCount": 24,
+      "request": "Modified: Modified memory-index.json",
+      "investigated": [
+        "/home/user/paperclipAU/.ruvector/memory-index.json"
+      ],
+      "learned": [
+        "deployment",
+        "authentication",
+        "cost",
+        "git",
+        "security"
+      ],
+      "completed": [
+        "Modified memory-index.json"
+      ],
+      "nextSteps": [
+        "Run tests to verify changes",
+        "Review changes before committing"
+      ],
+      "types": {
+        "action": 10,
+        "vcs": 13,
         "change": 1
       }
     }
