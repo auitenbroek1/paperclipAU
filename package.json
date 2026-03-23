@@ -46,6 +46,7 @@
   },
   "packageManager": "pnpm@9.15.4",
   "dependencies": {
+    "onnxruntime-node": "^1.24.3",
     "ruvector": "^0.2.16"
   }
 }
