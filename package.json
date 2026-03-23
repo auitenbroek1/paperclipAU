@@ -46,6 +46,9 @@
   },
   "packageManager": "pnpm@9.15.4",
   "dependencies": {
+    "@ruvector/cluster": "^0.1.0",
+    "@ruvector/graph-node": "^2.0.2",
+    "@ruvector/router": "^0.1.28",
     "onnxruntime-node": "^1.24.3",
     "ruvector": "^0.2.16"
   }

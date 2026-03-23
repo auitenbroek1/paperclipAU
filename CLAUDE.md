@@ -125,66 +125,91 @@ pnpm db:migrate       # Apply migrations
 ## RuVector — Intelligence Layer
 
 RuVector (`ruvector` npm package) is a high-performance vector database and
-ML intelligence engine built in Rust. It provides the semantic backbone for
-Paperclip's AI capabilities.
+ML intelligence engine with Rust NAPI bindings. It provides the semantic
+backbone for Paperclip's AI capabilities.
 
-### Core Modules & When to Use Them
+### IMPORTANT: Initialization
 
-| Module | Import | Use For |
-|--------|--------|---------|
-| **VectorDB** | `import { VectorDB } from 'ruvector'` | Embedding storage, similarity search, HNSW indexing |
-| **IntelligenceEngine** | `import { IntelligenceEngine } from 'ruvector'` | Full ML stack: semantic memory + SONA learning + agent routing + pattern recognition |
-| **SemanticRouter** | `import { SemanticRouter } from 'ruvector'` | Route tasks/queries to the right agent by intent |
-| **FastAgentDB** | `import { agentdbFast } from 'ruvector'` | In-memory episode/trajectory storage for agent learning (50-200x faster than CLI) |
-| **LearningEngine** | `import { LearningEngine } from 'ruvector'` | 9 RL algorithms (Q-learning, SARSA, PPO, Actor-Critic, Decision Transformer, etc.) |
-| **Sona** | `import { Sona } from 'ruvector'` | SONA continual learning: Micro-LoRA, EWC++, ReasoningBank, trajectory tracking |
-| **CodeGraph** | `import { CodeGraph } from 'ruvector'` | Hypergraph DB for entity relationships (Cypher queries, pathfinding, PageRank) |
-| **RuvectorCluster** | `import { RuvectorCluster } from 'ruvector'` | Distributed coordination: Raft consensus, auto-sharding, replication |
-| **AdaptiveEmbedder** | `import { AdaptiveEmbedder } from 'ruvector'` | Domain-adapted embeddings: LoRA fine-tuning, contrastive learning, EWC++ |
-| **EmbeddingService** | `import { embeddingService } from 'ruvector'` | Unified embedding generation with caching, batching, provider abstraction |
-| **ParallelIntelligence** | `import { ParallelIntelligence } from 'ruvector'` | Worker-thread parallelism for batch ML operations |
-| **GNN** | `import { differentiableSearch, gnnWrapper } from 'ruvector'` | Graph neural network: differentiable search, soft attention |
-| **Analysis** | `import { security, complexity, patterns } from 'ruvector'` | Code security scanning, complexity analysis, pattern extraction |
-| **CoverageRouter** | `import { parseIstanbulCoverage } from 'ruvector'` | Test coverage-aware routing and gap detection |
-| **TensorCompress** | `import { TensorCompress } from 'ruvector'` | Vector quantization for memory reduction (4-32x) |
+RuVector requires the bootstrap script for ONNX semantic embeddings.
+Without it, embeddings are character n-gram (NOT semantic — useless for search).
+
+```typescript
+// Always use the bootstrap for proper initialization
+import { initRuVector } from './scripts/ruvector-bootstrap.mjs';
+const rv = await initRuVector({ storagePath: '.ruvector/paperclip.db' });
+// rv.db       — VectorDB (HNSW, sub-ms search)
+// rv.embedder — ONNX MiniLM-L6-v2 (384d semantic embeddings)
+// rv.engine   — IntelligenceEngine (memory + routing + learning)
+// rv.router   — SemanticRouter (native, intent matching)
+// rv.graph    — GraphDatabase (Cypher, nodes require embeddings)
+// rv.sona     — SonaEngine (LoRA, EWC++, trajectory learning)
+// rv.embed()  — Helper: text → 384d semantic vector
+```
+
+**Model files** are pre-downloaded at `~/.ruvector/models/`. The bootstrap
+patches `fetch()` to serve them locally (Node.js DNS issues with HuggingFace).
+
+### Verified Subsystem Status
+
+| Subsystem | Status | Native Package | Notes |
+|-----------|--------|---------------|-------|
+| **VectorDB** | WORKING | `@ruvector/core` (Rust NAPI) | Real HNSW, sub-ms, cosine distance |
+| **ONNX Embedder** | WORKING | bundled WASM + onnxruntime-node | 384d all-MiniLM-L6-v2, SIMD enabled |
+| **SemanticRouter** | WORKING | `@ruvector/router` (native) | Use native directly, NOT the ruvector wrapper (API mismatch) |
+| **GraphDatabase** | WORKING | `@ruvector/graph-node` (native) | Cypher queries; nodes+edges require Float32Array embeddings |
+| **SONA** | WORKING | `@ruvector/sona` (Rust NAPI) | `new SonaEngine(384)` — takes dimension as single number |
+| **GNN** | AVAILABLE | `@ruvector/gnn` (native) | Differentiable search, attention mechanisms |
+| **Attention** | AVAILABLE | `@ruvector/attention` (native) | Flash, multi-head, hyperbolic attention |
+| **RVF Format** | AVAILABLE | `@ruvector/rvf` (native) | Binary vector container format |
+| **Cluster** | INSTALLED | `@ruvector/cluster` | Raft consensus, sharding (not yet tested) |
+| **IntelligenceEngine** | WORKING | bundled JS | Orchestrates all above; use `enableOnnx: true` |
+| **LearningEngine** | WORKING | bundled JS | 9 RL algorithms (Q-learning, SARSA, PPO, etc.) |
+| **AdaptiveEmbedder** | WORKING | bundled JS | LoRA adaptation, contrastive learning, EWC++ |
+| **Graph Algorithms** | WORKING | bundled JS | Stoer-Wagner, spectral clustering, Louvain, Tarjan |
+
+### API Quirks (Tested, Not Documented)
+
+- **VectorDB**: `distanceMetric` config crashes — use default (cosine). Search scores are distance (lower = more similar).
+- **SemanticRouter wrapper is BROKEN** — use `require('@ruvector/router')` directly:
+  ```typescript
+  import { SemanticRouter } from '@ruvector/router';
+  const router = new SemanticRouter({ dimension: 384, threshold: 0.5 });
+  router.addIntent({ name: 'backend', utterances: ['api','db'], embedding: Float32Array });
+  const match = router.routeWithEmbedding(queryFloat32Array);
+  ```
+- **GraphDatabase**: Nodes require `embedding: Float32Array(384)`. Edges require `from`, `to`, `edgeType`, `description`, `embedding`.
+- **SonaEngine**: Constructor takes a single number `new SonaEngine(384)`, NOT an options object.
+- **IntelligenceEngine**: `embed()` (sync) always uses hash fallback. MUST use `embedAsync()` or the bootstrap's `rv.embed()` for real semantic embeddings.
 
 ### Paperclip Business Applications
 
-Use RuVector to power these Paperclip capabilities:
-
 #### 1. Semantic Task Routing
-Route incoming tasks to the best-fit agent based on skills and past performance.
 
 ```typescript
-import { SemanticRouter, IntelligenceEngine } from 'ruvector';
+// Use @ruvector/router directly (not the broken wrapper)
+import { SemanticRouter } from '@ruvector/router';
+const router = new SemanticRouter({ dimension: 384, threshold: 0.5 });
 
-// Route tasks to agents by semantic intent
-const router = new SemanticRouter({ dimensions: 384, threshold: 0.7 });
-router.addRoute('backend-api', ['build REST endpoint', 'database migration', 'API route']);
-router.addRoute('frontend-ui', ['React component', 'CSS styling', 'user interface']);
-router.addRoute('security', ['auth flow', 'permission check', 'vulnerability scan']);
-const match = router.match(task.description);
-// → { route: 'backend-api', score: 0.92 }
+// Add intents with pre-computed ONNX embeddings
+const backendEmb = new Float32Array(await rv.embed('build REST API endpoint'));
+router.addIntent({ name: 'backend', utterances: ['api', 'database'], embedding: backendEmb });
+const match = router.routeWithEmbedding(new Float32Array(await rv.embed(task.description)));
+// → { intent: 'backend', score: 0.546 }
 ```
 
 #### 2. Agent Memory & Knowledge Base
-Give agents persistent semantic memory across sessions.
 
 ```typescript
-import { VectorDB, EmbeddingService } from 'ruvector';
+// Store with ONNX semantic embeddings (NOT n-gram)
+const vec = await rv.embed('JWT refresh token rotation pattern');
+await rv.db.insert({ id: 'pattern-001', vector: vec, metadata: { agent: 'auth-agent', type: 'pattern' } });
 
-// Store agent learnings as searchable embeddings
-const memory = new VectorDB({ dimensions: 384, storagePath: '.ruvector/agent-memory' });
-const embedder = new EmbeddingService();
-const [embedding] = await embedder.embed(['JWT refresh token rotation pattern']);
-await memory.insert({ id: 'pattern-001', vector: embedding, metadata: { agent: 'auth-agent', type: 'pattern' } });
-
-// Later: find relevant past learnings
-const results = await memory.search({ vector: queryEmbedding, k: 5 });
+// Search returns results ranked by cosine distance (lower = more similar)
+const results = await rv.db.search({ vector: await rv.embed('authentication tokens'), k: 5 });
+// → [{id: 'pattern-001', score: 0.502, metadata: {...}}, ...]
 ```
 
 #### 3. Agent Performance Learning
-Agents improve over time using reinforcement learning.
 
 ```typescript
 import { LearningEngine } from 'ruvector';
@@ -193,24 +218,26 @@ const learner = new LearningEngine();
 learner.configure('agent-routing', { algorithm: 'ppo', learningRate: 0.001 });
 learner.update('agent-routing', {
   state: 'task:api-endpoint', action: 'assign:backend-agent',
-  reward: 0.95, // task completed successfully
-  nextState: 'task:complete', done: true,
+  reward: 0.95, nextState: 'task:complete', done: true,
 });
 ```
 
 #### 4. Company Knowledge Graph
-Model organizational relationships: agents → projects → goals → tasks.
 
 ```typescript
-import { CodeGraph } from 'ruvector';
+// Use @ruvector/graph-node directly (nodes require embeddings)
+import { GraphDatabase } from '@ruvector/graph-node';
+const graph = new GraphDatabase();
 
-const graph = new CodeGraph({ storagePath: '.ruvector/company-graph' });
-graph.createNode('agent-001', ['Agent'], { name: 'Backend Dev', skills: ['typescript', 'postgres'] });
-graph.createNode('project-alpha', ['Project'], { name: 'Billing Module' });
-graph.createEdge({ from: 'agent-001', to: 'project-alpha', type: 'ASSIGNED_TO' });
+const agentEmb = new Float32Array(await rv.embed('Backend developer TypeScript PostgreSQL'));
+const projEmb = new Float32Array(await rv.embed('Billing and payments module'));
+const edgeEmb = new Float32Array(await rv.embed('assigned to work on'));
 
-// Query: "Which agents work on billing?"
-const result = graph.query("MATCH (a:Agent)-[:ASSIGNED_TO]->(p:Project {name: 'Billing Module'}) RETURN a");
+graph.createNode({ id: 'agent-001', labels: ['Agent'], properties: { name: 'Backend Dev' }, embedding: agentEmb });
+graph.createNode({ id: 'project-alpha', labels: ['Project'], properties: { name: 'Billing' }, embedding: projEmb });
+graph.createEdge({ from: 'agent-001', to: 'project-alpha', edgeType: 'ASSIGNED_TO', description: 'works on', properties: {}, embedding: edgeEmb });
+
+const result = graph.querySync("MATCH (a:Agent)-[:ASSIGNED_TO]->(p:Project) RETURN a");
 ```
 
 #### 5. Distributed Agent Coordination
@@ -231,30 +258,28 @@ await cluster.start();
 Learn which agent + model tier combo gives best results per cost.
 
 ```typescript
-import { IntelligenceEngine } from 'ruvector';
-
-const engine = new IntelligenceEngine({ embeddingDim: 384 });
-await engine.init();
-// Record outcomes and let SONA optimize routing
-await engine.recordEpisode({
+// Use the bootstrap-initialized engine (enableOnnx: true)
+await rv.engine.recordEpisode({
   state: 'task:simple-crud', action: 'model:haiku',
-  reward: 0.9, // good result at low cost
-  nextState: 'complete', done: true,
+  reward: 0.9, nextState: 'complete', done: true,
 });
-const route = await engine.routeAgent('Build a CRUD endpoint for users');
-// → { agent: 'backend-dev', confidence: 0.91, reason: 'pattern match: CRUD tasks' }
+const route = await rv.engine.route('Build a CRUD endpoint for users');
+// → { agent: 'coder', confidence: 0.5+, reason: 'pattern match' }
+// Confidence improves with training data over time
 ```
 
 #### 7. Document & Issue Semantic Search
 Search across company knowledge by meaning, not just keywords.
 
 ```typescript
-import { VectorDB, embeddingService } from 'ruvector';
+// Use bootstrap rv.embed() for real semantic embeddings (NOT EmbeddingService which is n-gram only)
 
-// Index all company documents and issue descriptions
-const docIndex = new VectorDB({ dimensions: 384, storagePath: '.ruvector/docs' });
-// Search by semantic similarity
-const results = await docIndex.search({ vector: queryVec, k: 10, filter: { type: 'issue' } });
+// Index documents with ONNX embeddings via bootstrap
+for (const doc of documents) {
+  await rv.db.insert({ id: doc.id, vector: await rv.embed(doc.description), metadata: { type: 'issue', title: doc.title } });
+}
+// Search by meaning — scores are cosine distance (lower = more similar)
+const results = await rv.db.search({ vector: await rv.embed('authentication security'), k: 10 });
 ```
 
 #### 8. Security & Code Quality Analysis
@@ -271,14 +296,15 @@ const metrics = complexity.analyze(sourceCode);
 ### RuVector Configuration Defaults
 
 ```typescript
-// Standard Paperclip RuVector config
-const config = {
-  embeddingDim: 384,          // MiniLM-L6 compatible
-  storagePath: '.ruvector/',  // Persist alongside project
-  hnsw: { m: 16, efConstruction: 200, efSearch: 50 },
-  distanceMetric: 'cosine',
-  autoPersist: true,
-};
+// Always use the bootstrap (handles ONNX model loading + fetch patching)
+import { initRuVector } from './scripts/ruvector-bootstrap.mjs';
+const rv = await initRuVector({
+  embeddingDim: 384,           // MiniLM-L6 (do not change)
+  storagePath: '.ruvector/',   // Persist alongside project
+  enableOnnx: true,            // REQUIRED for semantic search
+});
+// HNSW config: m=16, efConstruction=200, efSearch=50 (set in bootstrap)
+// Distance metric: cosine (default, do NOT set explicitly — crashes native)
 ```
 
 ### Integration Points with Paperclip Schema
