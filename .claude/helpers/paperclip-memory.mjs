@@ -425,6 +425,18 @@ async function generateContext(options = {}) {
   const parts = [];
   let tokenEstimate = 0;
 
+  // Lessons learned (highest priority — prevents repeat mistakes)
+  const lessonsPath = join(PROJECT_ROOT, 'tasks', 'lessons.md');
+  if (existsSync(lessonsPath)) {
+    try {
+      const lessons = readFileSync(lessonsPath, 'utf-8');
+      const trimmed = lessons.slice(0, 1500); // cap at ~375 tokens
+      parts.push('## Lessons Learned (Review Before Starting)');
+      parts.push(trimmed);
+      tokenEstimate += trimmed.length / 4;
+    } catch { /* ignore */ }
+  }
+
   // Recent session summaries (most valuable, least tokens)
   const summaries = index.getSessionSummaries(3);
   if (summaries.length > 0) {

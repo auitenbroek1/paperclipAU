@@ -36,6 +36,9 @@ intelligence layer that both can leverage.
   `node .claude/helpers/paperclip-memory.mjs search "relevant keywords"`
 - Memory observations are captured automatically — no manual action needed
 - When encountering a familiar-looking problem, search memory first to avoid repeat work
+- **If something goes sideways, STOP and re-plan immediately** — do not push through a broken approach. Enter plan mode, reassess, and start fresh.
+- **After ANY correction from the user**, update `tasks/lessons.md` with the pattern and a rule to prevent the same mistake. Review this file at the start of every session.
+- Before claiming work is done, ask: **"Would a staff engineer approve this?"** If not, fix it first.
 
 ## Project Structure
 
@@ -354,8 +357,20 @@ Replaces claude-mem patterns with zero external dependencies.
 | Hook | Action | What Happens |
 |------|--------|-------------|
 | **PostToolUse** | Observation capture | Every Write/Edit/Bash tool use → structured observation (type, title, narrative, concepts, files) → stored as 384d ONNX embedding in RuVector |
-| **SessionStart** | Context injection | Recent summaries + activity auto-injected into session context |
+| **SessionStart** | Context injection | Injects (1) `tasks/lessons.md` (2) recent summaries (3) recent activity into session context |
 | **Stop / SessionEnd** | Session summary | Synthesizes (request, investigated, learned, completed, next_steps) → stored as embedding |
+
+### Self-Improvement Loop
+
+After ANY correction from the user, update `tasks/lessons.md`:
+
+```markdown
+## Category
+- **Rule**: Description of what to do/not do
+```
+
+This file is auto-injected at every session start (highest priority in context).
+The lessons file is also the first thing subagents should review for project-specific gotchas.
 
 ### Progressive Disclosure Search (3-Layer, Token-Efficient)
 
