@@ -1,0 +1,38 @@
+{
+  "name": "Lead Engineer",
+  "role": "general",
+  "title": "",
+  "reportsToRole": "ceo",
+  "adapterType": "ruflo_claude_local",
+  "adapterConfig": {
+    "command": "claude",
+    "claudeConfigHome": "/srv/paperclip/claude-worker-home",
+    "rufloRequired": true,
+    "rufloMcpServerName": "ruflo",
+    "dangerouslySkipPermissions": true,
+    "maxTurnsPerRun": 300,
+    "timeoutSec": 0,
+    "graceSec": 15,
+    "instructionsBundleMode": "managed",
+    "instructionsEntryFile": "AGENTS.md",
+    "env": {
+      "HOME": {
+        "type": "plain",
+        "value": "/srv/paperclip/claude-worker-home"
+      },
+      "XDG_CONFIG_HOME": {
+        "type": "plain",
+        "value": "/srv/paperclip/claude-worker-home/.config"
+      }
+    }
+  },
+  "runtimeConfig": {
+    "heartbeat": {
+      "enabled": false
+    }
+  },
+  "permissions": {
+    "canCreateAgents": false
+  },
+  "instructionsAsset": "AGENTS.md"
+}
