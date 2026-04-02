@@ -81,6 +81,19 @@ If you want direct binary verification in addition to Claude MCP verification:
 
 That is optional. The adapter primarily enforces Ruflo through Claude MCP presence.
 
+## Recommended Role Mapping
+
+Use `ruflo_claude_local` for engineering-class workers that should always operate inside a Ruflo-prepared Claude environment:
+
+- CTO
+- Lead Engineer
+- Engineer
+- QA
+- DevOps
+- security or review specialists
+
+Prefer plain `claude_local` for roles that do not need Ruflo’s orchestration and MCP layer.
+
 ## Recommended First Live Test
 
 1. Create a new engineering agent using `ruflo_claude_local`.
@@ -93,3 +106,22 @@ That is optional. The adapter primarily enforces Ruflo through Claude MCP presen
 5. Confirm the same agent fails if the Ruflo MCP entry is removed.
 
 That last step proves the adapter is actually enforcing Ruflo rather than merely tolerating it.
+
+## First Live Test After Quota Reset
+
+Once Claude capacity is available again, use this exact sequence:
+
+1. Open the Paperclip UI and sign in.
+2. Create a small engineering agent with adapter type `ruflo_claude_local`.
+3. Set `claudeConfigHome` to the dedicated worker home for that machine.
+4. Run the adapter environment test first.
+5. Create a tiny issue with a bounded task:
+   - inspect the repo
+   - modify one file
+   - explain the change in the issue output
+6. Trigger the run manually.
+7. Validate that:
+   - the run starts normally
+   - Claude does not ask for login
+   - Ruflo remains present in Claude MCP
+   - the issue receives a concrete result instead of a permissions or auth failure

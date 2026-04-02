@@ -52,8 +52,7 @@ const ADVANCED_ADAPTER_OPTIONS: Array<{
     value: "ruflo_claude_local",
     label: "Claude + Ruflo",
     icon: Sparkles,
-    desc: "Claude Code with required Ruflo MCP",
-    recommended: true,
+    desc: "Claude Code with required Ruflo MCP for pre-provisioned engineering workers",
   },
   {
     value: "codex_local",

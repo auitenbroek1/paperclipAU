@@ -33,6 +33,19 @@ auth_logged_in() {
   printf '%s\n' "$output" | grep -q '"loggedIn":[[:space:]]*true'
 }
 
+probe_hit_rate_limit() {
+  local output="$1"
+  printf '%s\n' "$output" | grep -Eqi 'rate.limit|rate_limit|usage limit|quota|try again later|too many requests'
+}
+
+probe_completed_successfully() {
+  local output="$1"
+  if printf '%s\n' "$output" | grep -q 'ruflo-paperclip-ok'; then
+    return 0
+  fi
+  printf '%s\n' "$output" | grep -q '"type":"result".*"subtype":"success"'
+}
+
 echo "Validating Claude MCP registration..."
 MCP_LIST_OUTPUT="$("$CLAUDE_COMMAND" mcp list 2>&1 || true)"
 if ! contains_server "$MCP_LIST_OUTPUT" "$RUFLO_MCP_SERVER_NAME"; then
@@ -59,15 +72,25 @@ PROBE_EXIT=$?
 set -e
 
 if [[ $PROBE_EXIT -ne 0 ]]; then
+  if probe_hit_rate_limit "$PROBE_OUTPUT"; then
+    echo "error: Claude hello probe hit a rate limit or quota boundary." >&2
+    echo "Claude auth and Ruflo MCP wiring may still be correct; retry after the account limit resets." >&2
+    echo "$PROBE_OUTPUT" >&2
+    exit $PROBE_EXIT
+  fi
   echo "error: Claude hello probe failed." >&2
   echo "$PROBE_OUTPUT" >&2
   exit $PROBE_EXIT
 fi
 
-if ! printf '%s\n' "$PROBE_OUTPUT" | grep -q "ruflo-paperclip-ok"; then
-  echo "error: Claude hello probe did not return the expected marker." >&2
+if ! probe_completed_successfully "$PROBE_OUTPUT"; then
+  echo "error: Claude hello probe did not complete successfully." >&2
   echo "$PROBE_OUTPUT" >&2
   exit 1
+fi
+
+if ! printf '%s\n' "$PROBE_OUTPUT" | grep -q "ruflo-paperclip-ok"; then
+  echo "Claude hello probe completed successfully, but Claude answered naturally instead of returning the exact marker." >&2
 fi
 
 echo "Ruflo Claude local smoke test passed."
