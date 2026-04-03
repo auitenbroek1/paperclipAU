@@ -15,6 +15,7 @@ Use this template when creating engineering-focused Paperclip companies that sho
 
 - Adapter implementation: `packages/adapters/ruflo-claude-local`
 - Deployment notes: `docs/ruflo-claude-local.md`
+- Import guide: `docs/blueprints/ruflo-adapter-template-import.md`
 - Worker setup scripts:
   - `scripts/setup-ruflo-claude-local.sh`
   - `scripts/smoke-ruflo-claude-local.sh`
@@ -42,6 +43,10 @@ Use this template when creating engineering-focused Paperclip companies that sho
    ```
 
 5. Verify adapter config and then enable any desired heartbeats manually.
+
+For a full operator procedure, use:
+
+- `docs/blueprints/ruflo-adapter-template-import.md`
 
 ## Source-of-Truth Rule
 
