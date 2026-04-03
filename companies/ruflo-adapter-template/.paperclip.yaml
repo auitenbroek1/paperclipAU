@@ -1,0 +1,125 @@
+schema: paperclip/v1
+sidebar:
+  agents:
+    - ceo
+    - cto
+    - lead-engineer
+    - qa
+agents:
+  ceo:
+    role: ceo
+    adapter:
+      type: claude_local
+      config:
+        command: claude
+        maxTurnsPerRun: 300
+        timeoutSec: 0
+        graceSec: 15
+    runtime:
+      heartbeat:
+        enabled: false
+  cto:
+    role: cto
+    adapter:
+      type: ruflo_claude_local
+      config:
+        command: claude
+        claudeConfigHome: /srv/paperclip/claude-worker-home
+        rufloRequired: true
+        rufloMcpServerName: ruflo
+        dangerouslySkipPermissions: true
+        maxTurnsPerRun: 300
+        timeoutSec: 0
+        graceSec: 15
+        env:
+          HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home
+          XDG_CONFIG_HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home/.config
+    runtime:
+      heartbeat:
+        enabled: false
+    inputs:
+      env:
+        HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home
+          portability: system_dependent
+        XDG_CONFIG_HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home/.config
+          portability: system_dependent
+  lead-engineer:
+    role: engineer
+    adapter:
+      type: ruflo_claude_local
+      config:
+        command: claude
+        claudeConfigHome: /srv/paperclip/claude-worker-home
+        rufloRequired: true
+        rufloMcpServerName: ruflo
+        dangerouslySkipPermissions: true
+        maxTurnsPerRun: 300
+        timeoutSec: 0
+        graceSec: 15
+        env:
+          HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home
+          XDG_CONFIG_HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home/.config
+    runtime:
+      heartbeat:
+        enabled: false
+    inputs:
+      env:
+        HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home
+          portability: system_dependent
+        XDG_CONFIG_HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home/.config
+          portability: system_dependent
+  qa:
+    role: qa
+    adapter:
+      type: ruflo_claude_local
+      config:
+        command: claude
+        claudeConfigHome: /srv/paperclip/claude-worker-home
+        rufloRequired: true
+        rufloMcpServerName: ruflo
+        dangerouslySkipPermissions: true
+        maxTurnsPerRun: 300
+        timeoutSec: 0
+        graceSec: 15
+        env:
+          HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home
+          XDG_CONFIG_HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home/.config
+    runtime:
+      heartbeat:
+        enabled: false
+    inputs:
+      env:
+        HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home
+          portability: system_dependent
+        XDG_CONFIG_HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home/.config
+          portability: system_dependent

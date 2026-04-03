@@ -4,12 +4,12 @@ This blueprint preserves the working `Claude + Ruflo (local)` setup that was val
 
 ## Purpose
 
-Use this blueprint when creating engineering-focused Paperclip agents that should:
+Use this template when creating engineering-focused Paperclip companies that should:
 
 - run `claude` locally
 - require Ruflo MCP to be attached before execution
-- use the managed engineering instruction bundle
-- default to the hardened worker-home configuration
+- seed a shallow CEO -> CTO -> Lead Engineer / QA org
+- default technical roles to the hardened worker-home configuration
 
 ## Canonical Components
 
@@ -18,40 +18,33 @@ Use this blueprint when creating engineering-focused Paperclip agents that shoul
 - Worker setup scripts:
   - `scripts/setup-ruflo-claude-local.sh`
   - `scripts/smoke-ruflo-claude-local.sh`
-- Canonical engineering instruction asset:
-  - `server/src/onboarding-assets/engineering/AGENTS.md`
-- Reusable seed data:
-  - `blueprints/ruflo-adapter-template/company.json`
-  - `blueprints/ruflo-adapter-template/agents/lead-engineer/agent.json`
+- Importable company package:
+  - `companies/ruflo-adapter-template/COMPANY.md`
+  - `companies/ruflo-adapter-template/.paperclip.yaml`
+  - `companies/ruflo-adapter-template/agents/`
 
-## Canonical Lead Engineer Defaults
+## Default Org
 
-- Adapter type: `ruflo_claude_local`
-- Command: `claude`
-- Ruflo required: `true`
-- Ruflo MCP server name: `ruflo`
-- Claude worker home: `/srv/paperclip/claude-worker-home`
-- `HOME=/srv/paperclip/claude-worker-home`
-- `XDG_CONFIG_HOME=/srv/paperclip/claude-worker-home/.config`
-- Skip permissions: `true`
-- Max turns per run: `300`
-- Timeout seconds: `0`
-- Grace seconds: `15`
-- Instructions bundle mode: `managed`
-- Instructions entry file: `AGENTS.md`
-- Heartbeat enabled by default: `false`
-- Can create agents by default: `false`
+- CEO
+- CTO -> CEO
+- Lead Engineer -> CTO
+- QA -> CTO
 
 ## Intended Use
 
 1. Ensure the worker machine has Claude Code and Ruflo installed.
 2. Run `scripts/setup-ruflo-claude-local.sh`.
 3. Run `scripts/smoke-ruflo-claude-local.sh`.
-4. Create the agent using the config in `blueprints/ruflo-adapter-template/agents/lead-engineer/agent.json`.
-5. Materialize the managed instructions from `server/src/onboarding-assets/engineering/AGENTS.md`.
+4. Import the package:
+
+   ```sh
+   paperclipai company import https://github.com/auitenbroek1/paperclipAU/tree/main/companies/ruflo-adapter-template --target new
+   ```
+
+5. Verify adapter config and then enable any desired heartbeats manually.
 
 ## Source-of-Truth Rule
 
-If the live server state and the repo diverge, treat this repo as canonical after reconciliation.
+If the live server state and the repo diverge, treat `companies/ruflo-adapter-template` as canonical after reconciliation.
 
-The goal of this blueprint is to prevent future dependency on unversioned VPS runtime state.
+The goal of this blueprint is to prevent future dependency on unversioned VPS runtime state or ad hoc UI-only configuration.
