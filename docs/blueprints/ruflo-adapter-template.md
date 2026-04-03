@@ -9,7 +9,7 @@ Use this template when creating engineering-focused Paperclip companies that sho
 - run `claude` locally
 - require Ruflo MCP to be attached before execution
 - seed a shallow CEO -> CTO -> Lead Engineer / QA org
-- default technical roles to the hardened worker-home configuration
+- default all template roles to the hardened worker-home configuration
 
 ## Canonical Components
 

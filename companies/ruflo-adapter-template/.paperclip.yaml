@@ -9,15 +9,39 @@ agents:
   ceo:
     role: ceo
     adapter:
-      type: claude_local
+      type: ruflo_claude_local
       config:
         command: claude
+        model: claude-opus-4-6
+        claudeConfigHome: /srv/paperclip/claude-worker-home
+        rufloRequired: true
+        rufloMcpServerName: ruflo
+        dangerouslySkipPermissions: true
         maxTurnsPerRun: 300
         timeoutSec: 0
         graceSec: 15
+        env:
+          HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home
+          XDG_CONFIG_HOME:
+            type: plain
+            value: /srv/paperclip/claude-worker-home/.config
     runtime:
       heartbeat:
         enabled: false
+    inputs:
+      env:
+        HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home
+          portability: system_dependent
+        XDG_CONFIG_HOME:
+          kind: plain
+          requirement: optional
+          default: /srv/paperclip/claude-worker-home/.config
+          portability: system_dependent
   cto:
     role: cto
     adapter:

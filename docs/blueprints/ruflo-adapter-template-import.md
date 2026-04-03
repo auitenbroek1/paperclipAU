@@ -7,7 +7,7 @@ This guide explains how to create a new Paperclip company from the reusable Rufl
 
 Use this when you want a new company that starts with:
 
-- the custom `Claude + Ruflo (local)` adapter for technical roles
+- the custom `Claude + Ruflo (local)` adapter for all default roles
 - the preserved Lead Engineer engineering instructions
 - a shallow default org
 - versioned defaults that do not need to be rebuilt manually in the UI
@@ -47,7 +47,7 @@ Default org:
 
 Adapter defaults:
 
-- `CEO` uses `claude_local`
+- `CEO` uses `ruflo_claude_local`
 - `CTO` uses `ruflo_claude_local`
 - `Lead Engineer` uses `ruflo_claude_local`
 - `QA` uses `ruflo_claude_local`
@@ -65,6 +65,10 @@ Technical worker defaults:
 - `timeoutSec: 0`
 - `graceSec: 15`
 - timer heartbeats disabled on import
+
+CEO-specific default:
+
+- `model: claude-opus-4-6`
 
 ## Preconditions
 
@@ -169,14 +173,14 @@ paperclipai company import \
 
 ## Worker Setup Commands
 
-Run these on a host that will execute the technical workers:
+Run these on a host that will execute the imported workers:
 
 ```sh
 ./scripts/setup-ruflo-claude-local.sh
 ./scripts/smoke-ruflo-claude-local.sh
 ```
 
-If the smoke test fails, do not proceed to live runs for `CTO`, `Lead Engineer`, or `QA`.
+If the smoke test fails, do not proceed to live runs for `CEO`, `CTO`, `Lead Engineer`, or `QA`.
 
 ## Post-Import Verification Checklist
 
@@ -193,7 +197,7 @@ Confirm the org chart is:
 
 ### Adapter configuration
 
-For `CTO`, `Lead Engineer`, and `QA`, confirm:
+For `CEO`, `CTO`, `Lead Engineer`, and `QA`, confirm:
 
 - adapter type is `Claude + Ruflo (local)`
 - command is `claude`
@@ -203,6 +207,10 @@ For `CTO`, `Lead Engineer`, and `QA`, confirm:
 - interrupt grace is `15`
 - `HOME=/srv/paperclip/claude-worker-home`
 - `XDG_CONFIG_HOME=/srv/paperclip/claude-worker-home/.config`
+
+For `CEO`, also confirm:
+
+- model is `claude-opus-4-6`
 
 ### Instructions
 

@@ -1,6 +1,6 @@
 ---
 name: Ruflo Adapter Template
-description: Engineering-first Paperclip company template with CEO, CTO, Lead Engineer, and QA plus Ruflo-enforced Claude local defaults for the technical org
+description: Engineering-first Paperclip company template with CEO, CTO, Lead Engineer, and QA plus Ruflo-enforced Claude local defaults across the full org
 slug: ruflo-adapter-template
 schema: agentcompanies/v1
 version: 1.0.0
@@ -21,12 +21,12 @@ It seeds a shallow default org:
 - Lead Engineer reporting to CTO
 - QA reporting to CTO
 
-The technical org defaults to the custom `ruflo_claude_local` adapter so imported companies recreate the validated `Claude + Ruflo (local)` setup directly from package data instead of manual UI configuration.
+The full org defaults to the custom `ruflo_claude_local` adapter so imported companies recreate the validated `Claude + Ruflo (local)` setup directly from package data instead of manual UI configuration.
 
 Use this package when you want:
 
 - a standard CEO + CTO + Lead Engineer + QA starting structure
-- Ruflo-required Claude workers for technical roles
+- Ruflo-required Claude workers for CEO, CTO, Lead Engineer, and QA
 - the canonical Lead Engineer engineering policy preserved in version control
 - a clean import target from GitHub or a local directory
 

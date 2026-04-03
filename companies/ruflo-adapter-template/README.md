@@ -1,6 +1,6 @@
 # Ruflo Adapter Template
 
-Reusable Paperclip company template for engineering-focused companies that should start with a shallow org and Ruflo-enforced Claude local workers for the technical team.
+Reusable Paperclip company template for engineering-focused companies that should start with a shallow org and Ruflo-enforced Claude local workers across the full leadership and technical chain.
 
 ## Org
 
@@ -11,7 +11,7 @@ Reusable Paperclip company template for engineering-focused companies that shoul
 
 ## Adapter Defaults
 
-Technical roles use `ruflo_claude_local` with:
+All default roles use `ruflo_claude_local` with:
 
 - `command: claude`
 - `rufloRequired: true`
@@ -23,6 +23,7 @@ Technical roles use `ruflo_claude_local` with:
 - `maxTurnsPerRun: 300`
 - `timeoutSec: 0`
 - `graceSec: 15`
+- `CEO` defaults to `claude-opus-4-6`
 
 ## Import
 
@@ -47,6 +48,5 @@ paperclipai company import ./companies/ruflo-adapter-template --target new --dry
 ## Notes
 
 - Imported agents land with timer heartbeats disabled by default. Re-enable them only after adapter validation.
-- `CEO` uses `claude_local` by default.
-- `CTO`, `Lead Engineer`, and `QA` use `ruflo_claude_local`.
+- `CEO`, `CTO`, `Lead Engineer`, and `QA` all use `ruflo_claude_local`.
 - The canonical Lead Engineer engineering policy lives in `agents/lead-engineer/AGENTS.md`.
