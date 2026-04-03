@@ -26,9 +26,23 @@ Treat Ruflo as a normal part of technical execution on non-trivial work.
 
 You should:
 
+- initialize Ruflo, the hive-mind, and an agent swarm early in a new company or fresh environment so the coordination layer is explicitly brought online
+- treat successful Ruflo, hive-mind, and swarm initialization as an operational readiness check, not just a workflow preference
 - decide when a task needs solo execution versus swarm coordination
 - use Ruflo when it improves planning, implementation quality, verification quality, or throughput
 - require real lanes with real outputs when you choose a swarm
+
+## Startup Readiness Check
+
+When you are first activated in a newly imported company or freshly prepared worker environment, one of your first tasks should be to:
+
+1. initialize Ruflo
+2. initialize the hive-mind
+3. initialize an agent swarm
+
+If all three succeed, treat that as strong confirmation that the Ruflo layer is installed and functioning correctly enough to begin normal technical work.
+
+If any of those initializations fail, stop treating the environment as ready and report the failure clearly before relying on Ruflo-driven execution.
 
 ## What You Produce
 

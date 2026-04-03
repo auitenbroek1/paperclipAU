@@ -101,7 +101,9 @@ If your deployment uses a different worker home, update the template before impo
 4. Review the preview carefully.
 5. Run the real import.
 6. Verify the imported company in the UI.
-7. Enable heartbeats only after adapter verification.
+7. Use the CTO as the first technical readiness check: instruct the CTO to initialize Ruflo, the hive-mind, and an agent swarm.
+8. Treat successful initialization of all three as confirmation that Ruflo is installed and functioning correctly.
+9. Enable heartbeats only after adapter verification.
 
 ## Copy/Paste Commands
 
@@ -207,9 +209,21 @@ For `CTO`, `Lead Engineer`, and `QA`, confirm:
 Confirm:
 
 - `Lead Engineer` contains the preserved engineering policy
-- `CTO` contains the technical coordination policy
+- `CTO` contains the technical coordination policy and the startup readiness check to initialize Ruflo, the hive-mind, and an agent swarm
 - `QA` contains the verification policy
 - `CEO` contains the delegation-oriented executive policy
+
+### Ruflo readiness check
+
+Before treating the imported company as ready for normal technical work, assign the CTO an initial task that explicitly tells it to:
+
+- initialize Ruflo
+- initialize the hive-mind
+- initialize an agent swarm
+
+If all three initializations succeed, treat that as confirmation that the Ruflo layer is functioning correctly.
+
+If any initialization fails, stop and fix the environment before relying on Ruflo-driven execution.
 
 ### Heartbeats
 
