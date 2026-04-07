@@ -1394,6 +1394,125 @@
       "hash": "e8f83de8d7dd044c",
       "timestamp": "2026-03-23T23:36:05.407Z",
       "sessionId": "cbd55ed4-8bc4-4a1c-af71-0aa24a3c116f"
+    },
+    {
+      "id": "obs-1775583080842-qteq",
+      "type": "action",
+      "title": "Ran: ls packages/adapters/ 2>/dev/null && echo \"---\" && ls packag",
+      "narrative": "Tool: Bash. Command: ls packages/adapters/ 2>/dev/null && echo \"---\" && ls packages/adapters/*/  2>/dev/null | head -50. Description: List adapters directory",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "9e24020c86561c23",
+      "timestamp": "2026-04-07T17:31:20.842Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583090757-1dea",
+      "type": "action",
+      "title": "Ran: ls packages/adapters/gemini-local/src/ && echo \"---\" && ls p",
+      "narrative": "Tool: Bash. Command: ls packages/adapters/gemini-local/src/ && echo \"---\" && ls packages/adapters/claude-local/src/. Description: List source files",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "fb2ce3c95703c4f7",
+      "timestamp": "2026-04-07T17:31:30.757Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583103725-uwl1",
+      "type": "action",
+      "title": "Ran: ls packages/adapters/gemini-local/src/cli/ packages/adapters",
+      "narrative": "Tool: Bash. Command: ls packages/adapters/gemini-local/src/cli/ packages/adapters/gemini-local/src/server/ 2>/dev/null. Description: Inspect cli/server dirs",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "a90c1c46ca364d0a",
+      "timestamp": "2026-04-07T17:31:43.725Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583110007-gxv4",
+      "type": "action",
+      "title": "Ran: wc -l packages/adapters/gemini-local/src/server/*.ts && cat ",
+      "narrative": "Tool: Bash. Command: wc -l packages/adapters/gemini-local/src/server/*.ts && cat packages/adapters/gemini-local/package.json. Description: Check sizes and package config",
+      "concepts": [],
+      "files": [],
+      "tool": "Bash",
+      "hash": "75d0561783af5ddb",
+      "timestamp": "2026-04-07T17:31:50.007Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583127246-8cgy",
+      "type": "action",
+      "title": "Ran: grep -rn \"gemini_local\\|gemini-local\" server/src --include=\"",
+      "narrative": "Tool: Bash. Command: grep -rn \"gemini_local\\|gemini-local\" server/src --include=\"*.ts\" -l 2>/dev/null | head -10. Description: Find adapter registration",
+      "concepts": [
+        "agent"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "97d96e1e864b94db",
+      "timestamp": "2026-04-07T17:32:07.246Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583133247-tfzs",
+      "type": "action",
+      "title": "Ran: grep -n \"gemini\\|adapter\" server/src/adapters/registry.ts | ",
+      "narrative": "Tool: Bash. Command: grep -n \"gemini\\|adapter\" server/src/adapters/registry.ts | head -40. Description: Inspect registry",
+      "concepts": [
+        "agent"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "447eb7c42c6ba169",
+      "timestamp": "2026-04-07T17:32:13.247Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583143908-svsf",
+      "type": "action",
+      "title": "Ran: ls packages/adapters/openclaw-gateway/src/ packages/adapters",
+      "narrative": "Tool: Bash. Command: ls packages/adapters/openclaw-gateway/src/ packages/adapters/openclaw-gateway/src/server/ 2>/dev/null && wc -l packages/. Description: Check HTTP-style adapter structure",
+      "concepts": [
+        "api",
+        "agent"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "3896f86f55ef29a7",
+      "timestamp": "2026-04-07T17:32:23.908Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583158964-4xrz",
+      "type": "action",
+      "title": "Ran: grep -rn \"AdapterExecutionContext\\|AdapterExecutionResult\" p",
+      "narrative": "Tool: Bash. Command: grep -rn \"AdapterExecutionContext\\|AdapterExecutionResult\" packages/adapters/*/src/server/ -l 2>/dev/null | head -5 && e. Description: Find adapter utils types",
+      "concepts": [
+        "agent"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "ef41e8a1303878d3",
+      "timestamp": "2026-04-07T17:32:38.964Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
+    },
+    {
+      "id": "obs-1775583166874-nmqi",
+      "type": "action",
+      "title": "Ran: ls packages/adapter-utils/src/ 2>/dev/null && grep -n \"Adapt",
+      "narrative": "Tool: Bash. Command: ls packages/adapter-utils/src/ 2>/dev/null && grep -n \"AdapterExecutionContext\\|AdapterExecutionResult\\|onLog\\|onEvent\" . Description: Check adapter-utils types",
+      "concepts": [
+        "agent"
+      ],
+      "files": [],
+      "tool": "Bash",
+      "hash": "ee95ae73bec6e223",
+      "timestamp": "2026-04-07T17:32:46.874Z",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75"
     }
   ],
   "summaries": [
@@ -3202,6 +3321,23 @@
         "action": 12,
         "change": 4,
         "vcs": 2
+      }
+    },
+    {
+      "id": "sum-1775583274217",
+      "sessionId": "53ee8407-d1d7-47be-8f51-74c72347ae75",
+      "timestamp": "2026-04-07T17:34:34.217Z",
+      "observationCount": 9,
+      "request": "Ran: ls packages/adapters/ 2>/dev/null && echo \"---\" && ls packag",
+      "investigated": [],
+      "learned": [
+        "agent",
+        "api"
+      ],
+      "completed": [],
+      "nextSteps": [],
+      "types": {
+        "action": 9
       }
     }
   ],
